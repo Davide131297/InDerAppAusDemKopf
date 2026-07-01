@@ -6,8 +6,8 @@ struct MemoRowView: View {
     var body: some View {
         VStack(alignment: .leading, spacing: 8) {
             HStack {
-                Image(systemName: item.isDone ? "checkmark.circle.fill" : "circle")
-                    .foregroundStyle(item.isDone ? .green : .secondary)
+                Image(systemName: item.status.icon)
+                    .foregroundStyle(statusColor(item.status))
 
                 Text(item.title)
                     .font(.headline)
@@ -38,6 +38,14 @@ struct MemoRowView: View {
             .foregroundStyle(.secondary)
         }
         .padding(.vertical, 4)
+    }
+
+    private func statusColor(_ status: MemoStatus) -> Color {
+        switch status {
+        case .offen: return .secondary
+        case .inArbeit: return .blue
+        case .erledigt: return .green
+        }
     }
 }
 

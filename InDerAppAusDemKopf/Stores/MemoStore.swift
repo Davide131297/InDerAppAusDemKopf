@@ -31,9 +31,14 @@ final class MemoStore: ObservableObject {
         items.removeAll { $0.id == item.id }
     }
 
+    func updateStatus(id: UUID, status: MemoStatus) {
+        guard let index = items.firstIndex(where: { $0.id == id }) else { return }
+        items[index].status = status
+    }
+
     func toggleDone(_ item: MemoItem) {
         guard let index = items.firstIndex(where: { $0.id == item.id }) else { return }
-        items[index].isDone.toggle()
+        items[index].status = items[index].status == .erledigt ? .offen : .erledigt
     }
 
     private func loadItems() {

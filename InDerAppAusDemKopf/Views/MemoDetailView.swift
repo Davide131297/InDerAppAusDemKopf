@@ -10,7 +10,7 @@ struct MemoDetailView: View {
     @State private var note: String
     @State private var category: MemoCategory
     @State private var priority: MemoPriority
-    @State private var isDone: Bool
+    @State private var status: MemoStatus
     @State private var hasDueDate: Bool
     @State private var dueDate: Date
 
@@ -20,7 +20,7 @@ struct MemoDetailView: View {
         _note = State(initialValue: item.note)
         _category = State(initialValue: item.category)
         _priority = State(initialValue: item.priority)
-        _isDone = State(initialValue: item.isDone)
+        _status = State(initialValue: item.status)
         _hasDueDate = State(initialValue: item.dueDate != nil)
         _dueDate = State(initialValue: item.dueDate ?? Date())
     }
@@ -38,7 +38,11 @@ struct MemoDetailView: View {
             }
 
             Section("Status") {
-                Toggle("Erledigt", isOn: $isDone)
+                Picker("Status", selection: $status) {
+                    ForEach(MemoStatus.allCases) { s in
+                        Label(s.rawValue, systemImage: s.icon).tag(s)
+                    }
+                }
 
                 Picker("Kategorie", selection: $category) {
                     ForEach(MemoCategory.allCases) { category in
@@ -85,7 +89,7 @@ struct MemoDetailView: View {
             category: category,
             priority: priority,
             dueDate: hasDueDate ? dueDate : nil,
-            isDone: isDone,
+            status: status,
             createdAt: item.createdAt
         )
 

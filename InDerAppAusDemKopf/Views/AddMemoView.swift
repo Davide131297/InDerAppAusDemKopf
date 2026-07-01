@@ -8,6 +8,7 @@ struct AddMemoView: View {
     @State private var note = ""
     @State private var category: MemoCategory = .personal
     @State private var priority: MemoPriority = .medium
+    @State private var status: MemoStatus = .offen
     @State private var hasDueDate = false
     @State private var dueDate = Date()
 
@@ -25,6 +26,12 @@ struct AddMemoView: View {
                 }
 
                 Section("Organisation") {
+                    Picker("Status", selection: $status) {
+                        ForEach(MemoStatus.allCases) { s in
+                            Label(s.rawValue, systemImage: s.icon).tag(s)
+                        }
+                    }
+
                     Picker("Kategorie", selection: $category) {
                         ForEach(MemoCategory.allCases) { category in
                             Text(category.rawValue).tag(category)
@@ -69,7 +76,8 @@ struct AddMemoView: View {
             note: note.trimmingCharacters(in: .whitespacesAndNewlines),
             category: category,
             priority: priority,
-            dueDate: hasDueDate ? dueDate : nil
+            dueDate: hasDueDate ? dueDate : nil,
+            status: status
         )
 
         store.add(item)
