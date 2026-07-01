@@ -32,39 +32,6 @@ struct MemoItem: Identifiable, Codable, Equatable {
         self.createdAt = createdAt
     }
 
-    // Custom Codable to migrate old `isDone: Bool` data to `status`
-    enum CodingKeys: String, CodingKey {
-        case id, title, note, category, priority, dueDate, status, isDone, createdAt
-    }
-
-    init(from decoder: Decoder) throws {
-        let c = try decoder.container(keyedBy: CodingKeys.self)
-        id = try c.decode(UUID.self, forKey: .id)
-        title = try c.decode(String.self, forKey: .title)
-        note = try c.decode(String.self, forKey: .note)
-        category = try c.decode(MemoCategory.self, forKey: .category)
-        priority = try c.decode(MemoPriority.self, forKey: .priority)
-        dueDate = try c.decodeIfPresent(Date.self, forKey: .dueDate)
-        createdAt = try c.decode(Date.self, forKey: .createdAt)
-        if let s = try c.decodeIfPresent(MemoStatus.self, forKey: .status) {
-            status = s
-        } else {
-            let done = (try? c.decode(Bool.self, forKey: .isDone)) ?? false
-            status = done ? .erledigt : .offen
-        }
-    }
-
-    func encode(to encoder: Encoder) throws {
-        var c = encoder.container(keyedBy: CodingKeys.self)
-        try c.encode(id, forKey: .id)
-        try c.encode(title, forKey: .title)
-        try c.encode(note, forKey: .note)
-        try c.encode(category, forKey: .category)
-        try c.encode(priority, forKey: .priority)
-        try c.encodeIfPresent(dueDate, forKey: .dueDate)
-        try c.encode(status, forKey: .status)
-        try c.encode(createdAt, forKey: .createdAt)
-    }
 }
 
 enum MemoStatus: String, CaseIterable, Codable, Identifiable {

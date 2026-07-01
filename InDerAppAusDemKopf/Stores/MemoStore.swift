@@ -45,7 +45,7 @@ final class MemoStore: ObservableObject {
         let url = fileURL
 
         guard FileManager.default.fileExists(atPath: url.path) else {
-            items = MemoStore.sampleItems
+            items = []
             return
         }
 
@@ -54,7 +54,7 @@ final class MemoStore: ObservableObject {
             items = try JSONDecoder.memoDecoder.decode([MemoItem].self, from: data)
         } catch {
             print("Fehler beim Laden der Einträge: \(error.localizedDescription)")
-            items = MemoStore.sampleItems
+            items = []
         }
     }
 
@@ -72,21 +72,6 @@ final class MemoStore: ObservableObject {
         return documentsDirectory.appendingPathComponent(fileName)
     }
 
-    private static let sampleItems: [MemoItem] = [
-        MemoItem(
-            title: "Projektbericht planen",
-            note: "Gliederung erstellen und Anforderungen aus Aufgabe 1.2 berücksichtigen.",
-            category: .study,
-            priority: .high,
-            dueDate: Calendar.current.date(byAdding: .day, value: 2, to: Date())
-        ),
-        MemoItem(
-            title: "Einkaufsliste ergänzen",
-            note: "Milch, Brot und Obst notieren.",
-            category: .shopping,
-            priority: .medium
-        )
-    ]
 }
 
 private extension JSONEncoder {
